@@ -1,5 +1,7 @@
 # Tempus Swift rewrite plan
 
+> **Status (2026-11-19): done.** The Swift app replaced the Tauri app, and the old files were removed. The last Tauri version is in commit `be7707d`. Notes on what changed from this plan: the project has no separate entitlements file (sandbox, camera and file access come from build settings); frames in video mode are not duplicated to fill gaps (the previous frame just stays on screen); and `NSScreenCaptureUsageDescription` was dropped because macOS doesn't use it.
+
 Goal: replace the Tauri + React app with a native macOS app in Swift / SwiftUI that keeps every current feature, looks native (Liquid Glass, automatic dark mode), and records smaller, sharper video. Then delete the Tauri and web files.
 
 ## Decisions
