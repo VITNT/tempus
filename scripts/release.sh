@@ -142,7 +142,7 @@ VERSION=$VERSION SIZE=$SIZE SHA=$SHA perl -0pi -e '
   s{(data-release="sha256">)[^<]*}{$1$ENV{SHA}}g;
 ' docs/index.html
 print "docs/index.html → $VERSION, $SIZE"
-print "Upload $OUT/$APP_NAME.dmg next to docs/index.html (the page links to Tempus.dmg)."
+print "Attach $OUT/$APP_NAME.dmg to a GitHub Release, named exactly Tempus.dmg (the page links to releases/latest/download/Tempus.dmg)."
 
 step "Done"
 ls -lh "$DMG"

@@ -12,11 +12,11 @@
     --surface: #ffffff;
     --text: #1d1d1f;
     --muted: #6e6e73;
-    --line: rgba(0, 0, 0, 0.09);
+    --line: rgba(0, 0, 0, 0.07);
     --accent: #e5413a;
     --accent-ink: #ffffff;
     --chip: rgba(0, 0, 0, 0.05);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 28px rgba(0, 0, 0, 0.06);
+    --shadow: none;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -27,7 +27,7 @@
       --line: rgba(255, 255, 255, 0.1);
       --accent: #ff5a52;
       --chip: rgba(255, 255, 255, 0.07);
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+      --shadow: none;
     }
   }
   :root[data-theme="dark"] {
@@ -38,7 +38,7 @@
     --line: rgba(255, 255, 255, 0.1);
     --accent: #ff5a52;
     --chip: rgba(255, 255, 255, 0.07);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+    --shadow: none;
   }
 
   * { box-sizing: border-box; }
@@ -56,80 +56,81 @@
     background: var(--chip);
     padding: 0.1em 0.4em;
     border-radius: 5px;
+    overflow-wrap: anywhere;
   }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
 
-  header.hero { text-align: center; padding: 72px 0 56px; }
-  .hero img { width: 128px; height: 128px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.22)); }
-  .hero h1 { font-size: clamp(40px, 7vw, 60px); line-height: 1.05; letter-spacing: -0.025em; margin: 22px 0 10px; }
-  .hero .lede { font-size: clamp(19px, 2.6vw, 23px); color: var(--muted); max-width: 34em; margin: 0 auto 30px; line-height: 1.4; }
+  header.hero { text-align: center; padding: 112px 0 96px; }
+  .hero img { width: 112px; height: 112px; filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.14)); }
+  .hero h1 { font-size: clamp(40px, 7vw, 60px); line-height: 1.05; letter-spacing: -0.025em; margin: 32px 0 16px; }
+  .hero .lede { font-size: clamp(19px, 2.6vw, 23px); color: var(--muted); max-width: 34em; margin: 0 auto 44px; line-height: 1.45; }
   .download {
     display: inline-flex; align-items: center; gap: 10px;
     background: var(--accent); color: var(--accent-ink);
     text-decoration: none; font-weight: 600; font-size: 18px;
-    padding: 14px 28px; border-radius: 999px;
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 14px 28px; border-radius: 999px; white-space: nowrap;
+    transition: opacity 0.15s ease;
   }
-  .download:hover { transform: translateY(-1px); box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 42%, transparent); }
+  .download:hover { opacity: 0.88; }
   .download:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 3px; }
   .download svg { width: 20px; height: 20px; }
-  .meta { margin-top: 16px; color: var(--muted); font-size: 14px; }
-  .meta span + span::before { content: "·"; margin: 0 8px; }
+  .meta { margin-top: 24px; color: var(--muted); font-size: 14px; }
+  .meta span + span::before { content: "·"; margin: 0 12px; }
 
-  .strip { display: flex; justify-content: center; gap: 6px; margin: 44px auto 0; max-width: 560px; }
-  .strip i {
-    flex: 1; aspect-ratio: 16 / 10; border-radius: 6px; border: 1px solid var(--line);
-    background: linear-gradient(135deg, hsl(calc(205 + var(--n) * 24) 60% 58%), hsl(calc(235 + var(--n) * 24) 55% 42%));
-    opacity: calc(0.35 + var(--n) * 0.1);
+  .note {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; padding: 20px 24px; margin: 0 0 32px; color: var(--muted); font-size: 15.5px; box-shadow: var(--shadow);
   }
+  .note strong { color: var(--text); }
+  .gk-steps { margin-bottom: 32px; }
+  .steps .path { display: inline; }
+  .steps .quote { display: block; margin-top: 10px; color: var(--text); font-size: 15px; }
 
-  section { padding: 48px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: 30px; letter-spacing: -0.015em; margin: 0 0 8px; line-height: 1.2; }
-  .sub { color: var(--muted); margin: 0 0 28px; }
+  section { padding: 88px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 30px; letter-spacing: -0.015em; margin: 0 0 12px; line-height: 1.2; }
+  .sub { color: var(--muted); margin: 0 0 44px; max-width: 38em; }
 
-  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: step; }
+  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: step; }
   ol.steps li {
     counter-increment: step; background: var(--surface); border: 1px solid var(--line);
-    border-radius: 16px; padding: 22px 22px 20px; box-shadow: var(--shadow);
+    border-radius: 14px; padding: 28px; box-shadow: var(--shadow);
   }
   ol.steps li::before {
-    content: counter(step); display: grid; place-items: center;
-    width: 30px; height: 30px; border-radius: 50%; margin-bottom: 14px;
-    background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent);
-    font-weight: 700; font-size: 15px;
+    content: counter(step); display: block; margin-bottom: 16px;
+    color: var(--accent); font-weight: 600; font-size: 15px;
   }
-  .steps h3 { margin: 0 0 6px; font-size: 18px; }
+  .steps h3 { margin: 0 0 8px; font-size: 18px; }
   .steps p { margin: 0; color: var(--muted); font-size: 15.5px; }
 
-  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); }
-  .card h3 { margin: 0 0 4px; font-size: 17px; }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 8px; font-size: 17px; }
   .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
 
-  .perm { display: grid; gap: 14px; }
-  .perm .card p + p { margin-top: 8px; }
+  .perm { display: grid; gap: 20px; }
+  .perm .card p + p { margin-top: 10px; }
   .path { display: inline-block; font-size: 15px; color: var(--text); }
 
-  details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 20px; margin-bottom: 10px; }
-  summary { cursor: pointer; font-weight: 600; padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  details { border-bottom: 1px solid var(--line); }
+  details:first-of-type { border-top: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; padding: 22px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
   summary::-webkit-details-marker { display: none; }
   summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 22px; line-height: 1; }
   details[open] summary::after { content: "−"; }
-  details > div { color: var(--muted); padding: 0 0 18px; font-size: 15.5px; }
-  details > div p { margin: 0 0 10px; }
+  details > div { color: var(--muted); padding: 0 0 26px; font-size: 15.5px; }
+  details > div p { margin: 0 0 12px; }
   details > div p:last-child { margin: 0; }
 
   .checksum { word-break: break-all; }
-  footer { text-align: center; color: var(--muted); font-size: 14px; padding: 36px 0 56px; border-top: 1px solid var(--line); }
+  footer { text-align: center; color: var(--muted); font-size: 14px; padding: 56px 0 80px; border-top: 1px solid var(--line); }
 
   @media (max-width: 520px) {
     body { font-size: 16px; }
-    header.hero { padding: 48px 0 40px; }
-    .hero img { width: 104px; height: 104px; }
+    header.hero { padding: 72px 0 64px; }
+    .hero img { width: 96px; height: 96px; }
     .meta span { display: block; }
     .meta span + span::before { content: none; }
-    section { padding: 36px 0; }
+    section { padding: 60px 0; }
   }
   @media (prefers-reduced-motion: reduce) { .download { transition: none; } }
 </style>
@@ -150,16 +151,13 @@
       <span>Apple silicon and Intel</span>
       <span data-release="size">1.6 MB</span>
     </div>
-    <div class="strip" aria-hidden="true">
-      <i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i>
-    </div>
   </div>
 </header>
 
 <main class="wrap">
   <section id="install">
     <h2>Install Tempus</h2>
-    <p class="sub">It takes about a minute. You don't need an account.</p>
+    <p class="sub">It takes about a minute. You don't need an account. If macOS blocks Tempus, see <a href="#first-open">Opening Tempus the first time</a>.</p>
     <ol class="steps">
       <li>
         <h3>Open the download</h3>
@@ -174,6 +172,56 @@
         <p>Find Tempus in Launchpad or your Applications folder and open it. Press <kbd>⌘N</kbd> to start your first timelapse.</p>
       </li>
     </ol>
+  </section>
+
+  <section id="first-open">
+    <h2>Opening Tempus the first time</h2>
+    <p class="sub">This build isn't notarized by Apple yet, so macOS blocks it until you approve it. You do this once for the disk image and once for the app. After that, Tempus opens normally.</p>
+    <p class="note"><strong>Why the warning?</strong> Notarization is Apple's automated malware check for apps distributed outside the App Store. Tempus hasn't gone through it yet, so macOS can't confirm who made it. Only approve apps you downloaded from a source you trust, such as this page or the <a href="https://github.com/VITNT/tempus/releases">GitHub releases</a>.</p>
+    <ol class="steps gk-steps">
+      <li>
+        <h3>Open the disk image</h3>
+        <p>Double-click <code>Tempus.dmg</code>. macOS shows a message like:
+          <span class="quote">"Tempus.dmg" Not Opened. Apple could not verify "Tempus.dmg" is free of malware…</span>
+        </p>
+        <p style="margin-top:10px">Click <strong>Done</strong>. Don't click Move to Trash.</p>
+      </li>
+      <li>
+        <h3>Allow it in System Settings</h3>
+        <p>Open <span class="path">Apple menu → System Settings → Privacy &amp; Security</span>. Scroll down to <strong>Security</strong>, where it says Tempus.dmg was blocked. Click <strong>Open Anyway</strong>.</p>
+      </li>
+      <li>
+        <h3>Confirm</h3>
+        <p>Enter your Mac password or use Touch ID, then click <strong>Open Anyway</strong> again in the dialog that appears. The disk image opens.</p>
+      </li>
+      <li>
+        <h3>Install the app</h3>
+        <p>Drag Tempus onto the Applications folder, then eject the disk image from the Finder sidebar.</p>
+      </li>
+      <li>
+        <h3>Open Tempus and allow it</h3>
+        <p>Open Tempus from Applications. macOS blocks it the same way. Click <strong>Done</strong>, go back to <span class="path">Privacy &amp; Security</span>, click <strong>Open Anyway</strong> next to Tempus, and confirm with your password.</p>
+      </li>
+      <li>
+        <h3>You're set</h3>
+        <p>Tempus opens. From now on it opens like any other app, including after you install updates the same way.</p>
+      </li>
+    </ol>
+    <details>
+      <summary>I don't see an Open Anyway button</summary>
+      <div>
+        <p>The button only appears after you try to open the file, and only for about an hour afterward. Double-click <code>Tempus.dmg</code> or Tempus again, click <strong>Done</strong>, then go straight back to <span class="path">System Settings → Privacy &amp; Security</span> and scroll to the bottom of the page.</p>
+        <p>Right-clicking the app and choosing Open no longer skips this check on current versions of macOS. Use Privacy &amp; Security instead.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Use Terminal instead (advanced)</summary>
+      <div>
+        <p>macOS marks downloaded files as quarantined, and that mark is what triggers the block. After dragging Tempus to Applications, you can remove the mark in Terminal:</p>
+        <p><code>xattr -dr com.apple.quarantine /Applications/Tempus.app</code></p>
+        <p>Then open Tempus normally. This turns off the check only for Tempus. Only do this for apps from a source you trust.</p>
+      </div>
+    </details>
   </section>
 
   <section id="permissions">
@@ -210,7 +258,7 @@
     <details>
       <summary>macOS says it can't verify the developer</summary>
       <div>
-        <p>Official releases are notarized by Apple and open normally. If you built Tempus yourself or got a test build, open <span class="path">System Settings → Privacy &amp; Security</span>, scroll to the message about Tempus, and click <strong>Open Anyway</strong>.</p>
+        <p>This build isn't notarized yet. Follow the steps in <a href="#first-open">Opening Tempus the first time</a>. You only need to approve it once.</p>
       </div>
     </details>
     <details>
