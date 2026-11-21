@@ -6,6 +6,8 @@ struct DiskImage: View {
     let url: URL
     var version = 0
     var contentMode: ContentMode = .fill
+    /// Decode a downscaled copy no larger than this many pixels on its long side.
+    var maxPixelSize: Int?
     @State private var image: CGImage?
 
     var body: some View {
@@ -17,8 +19,11 @@ struct DiskImage: View {
             }
         }
         .task(id: "\(url.path())#\(version)") {
-            let url = url
-            image = await Task.detached(priority: .utility) { Stills.loadImage(at: url).map(Unchecked.init) }.value?.value
+            let url = url, maxPixelSize = maxPixelSize
+            image = await Task.detached(priority: .utility) {
+                let image = maxPixelSize.map { Stills.loadThumbnail(at: url, maxPixelSize: $0) } ?? Stills.loadImage(at: url)
+                return image.map(Unchecked.init)
+            }.value?.value
         }
     }
 }

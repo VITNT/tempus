@@ -2,12 +2,14 @@
 import CoreGraphics
 import VideoToolbox
 
-/// Turns a screenshot session's HEIC frames into an MP4, one second per frame.
+/// Turns a screenshot session's HEIC frames into an MP4 at a chosen frame rate.
 nonisolated enum FrameExporter {
-    static let framesPerSecond: Int32 = 1
+    static let fpsOptions = [1, 2, 5, 10, 15, 24, 30]
+    static let defaultFPS = 1
 
-    static func export(frames: [URL], to url: URL, progress: @escaping @Sendable (Double) -> Void) async throws {
+    static func export(frames: [URL], fps: Int = defaultFPS, to url: URL, progress: @escaping @Sendable (Double) -> Void) async throws {
         guard !frames.isEmpty else { throw TempusError.noFrames }
+        let framesPerSecond = Int32(max(1, min(fps, 60)))
 
         // Size the video to the largest frame (read from headers, no decoding).
         var width = 0, height = 0
@@ -23,7 +25,7 @@ nonisolated enum FrameExporter {
         try? FileManager.default.removeItem(at: url)
         let writer = try AVAssetWriter(outputURL: url, fileType: .mp4)
         guard let settings = [VideoCodec.hevc, .h264].lazy
-            .map({ outputSettings(codec: $0, width: width, height: height) })
+            .map({ outputSettings(codec: $0, width: width, height: height, fps: Int(framesPerSecond)) })
             .first(where: { writer.canApply(outputSettings: $0, forMediaType: .video) })
         else { throw TempusError.noEncoder }
 
@@ -64,7 +66,7 @@ nonisolated enum FrameExporter {
         }
     }
 
-    private static func outputSettings(codec: VideoCodec, width: Int, height: Int) -> [String: Any] {
+    private static func outputSettings(codec: VideoCodec, width: Int, height: Int, fps: Int) -> [String: Any] {
         [
             AVVideoCodecKey: codec == .hevc ? AVVideoCodecType.hevc : AVVideoCodecType.h264,
             AVVideoWidthKey: width,
@@ -73,8 +75,9 @@ nonisolated enum FrameExporter {
                 // Constant quality: each frame is a fresh screenshot, so let the
                 // encoder spend what it needs to keep text sharp.
                 AVVideoQualityKey: 0.8,
-                AVVideoExpectedSourceFrameRateKey: Int(framesPerSecond),
-                AVVideoMaxKeyFrameIntervalKey: 2,
+                AVVideoExpectedSourceFrameRateKey: fps,
+                // A keyframe every ~2 seconds keeps scrubbing responsive.
+                AVVideoMaxKeyFrameIntervalKey: max(2, fps * 2),
                 AVVideoProfileLevelKey: codec == .hevc ? kVTProfileLevel_HEVC_Main_AutoLevel as String : AVVideoProfileLevelH264HighAutoLevel,
             ] as [String: Any],
         ]

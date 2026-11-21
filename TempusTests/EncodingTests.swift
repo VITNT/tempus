@@ -90,6 +90,48 @@ struct EncodingTests {
         #expect(progress.last == 1)
     }
 
+    @Test func screenshotExportHonoursFrameRate() async throws {
+        let folder = FileManager.default.temporaryDirectory.appending(path: "tempus-fps-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        var frames: [URL] = []
+        for index in 0..<10 {
+            let image = CIImage(color: CIColor(red: Double(index) / 10, green: 0.3, blue: 0.5)).cropped(to: CGRect(x: 0, y: 0, width: 640, height: 400))
+            let url = folder.appending(path: String(format: "%06d.heic", index + 1))
+            try Stills.writeHEIC(image, to: url)
+            frames.append(url)
+        }
+        let output = temporaryURL("mp4")
+        defer { try? FileManager.default.removeItem(at: output) }
+        try await FrameExporter.export(frames: frames, fps: 5, to: output) { _ in }
+        let duration = try await AVURLAsset(url: output).load(.duration).seconds
+        #expect(abs(duration - 2) < 0.01, "10 frames at 5 fps should be 2 s, got \(duration)")
+    }
+
+    @Test func retimerChangesVideoLength() async throws {
+        let source = temporaryURL("mp4")
+        defer { try? FileManager.default.removeItem(at: source) }
+        // 240 s of "recording" at 60× is a 4 s video.
+        let writer = try TimelapseWriter.create(url: source, sourceWidth: 1280, sourceHeight: 720, speed: 60)
+        for index in 0..<120 {
+            let frame = yuvFrame(width: 1280, height: 720, luma: UInt8(16 + index))
+            var attempts = 0
+            while !writer.append(frame, at: Double(index) * 2), attempts < 200 {
+                attempts += 1
+                try await Task.sleep(for: .milliseconds(5))
+            }
+        }
+        try await writer.finish(at: 240)
+
+        for (rate, expected) in [(2.0, 2.0), (0.5, 8.0)] {
+            let output = temporaryURL("mp4")
+            defer { try? FileManager.default.removeItem(at: output) }
+            try await VideoRetimer.export(from: source, to: output, rate: rate) { _ in }
+            let duration = try await AVURLAsset(url: output).load(.duration).seconds
+            #expect(abs(duration - expected) < 0.1, "\(rate)× should be \(expected) s, got \(duration)")
+        }
+    }
+
     @Test func thumbnailIsDownscaled() throws {
         let image = CIImage(color: .gray).cropped(to: CGRect(x: 0, y: 0, width: 3200, height: 2000))
         let thumbnail = try #require(Stills.thumbnail(of: image))

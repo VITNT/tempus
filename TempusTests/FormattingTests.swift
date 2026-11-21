@@ -28,7 +28,14 @@ struct FormattingTests {
         #expect(Format.bytes(1_500_000_000) == "1.50 GB")
     }
 
+    @Test func rate() {
+        #expect(Format.rate(1) == "1×")
+        #expect(Format.rate(0.25) == "0.25×")
+        #expect(Format.rate(1.5) == "1.5×")
+    }
+
     @Test func speedOutput() {
+        #expect(Format.speedOutput(2) == "30 min")
         #expect(Format.speedOutput(5) == "12 min")
         #expect(Format.speedOutput(60) == "1 min")
         #expect(Format.speedOutput(120) == "30 sec")

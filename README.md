@@ -37,6 +37,33 @@ xcodebuild -project Tempus.xcodeproj -scheme Tempus -derivedDataPath build/Deriv
 
 The tests cover the bitrate plan, frame timing, formatting, and real HEVC and H.264 encodes through AVFoundation. Prefix the command with `TEST_RUNNER_TEMPUS_SNAPSHOTS=1` to also render each screen to PNGs in `~/Library/Containers/app.tempus.timelapse/Data/tmp/tempus-snapshots/`. Those images are approximate: they don't show Liquid Glass and dark mode renders on a transparent background.
 
+## Release
+
+`scripts/release.sh` archives a universal (Apple silicon + Intel) Release build, signs it, and packages `build/release/Tempus-<version>.dmg` with a drag-to-Applications window, a stable-named `Tempus.dmg` copy, and a SHA-256 checksum. It also writes the version, size and checksum into the download page at `docs/index.html`.
+
+```bash
+scripts/release.sh
+```
+
+For a DMG that opens on other Macs without a Gatekeeper warning, it must be signed with a **Developer ID Application** certificate and notarized. One-time setup:
+
+1. In Xcode → Settings → Accounts, select your team, click **Manage Certificates…**, and add a **Developer ID Application** certificate (needs a paid Apple Developer Program membership, Account Holder or Admin role).
+2. Save notarization credentials to the keychain, using an [app-specific password](https://account.apple.com):
+
+   ```bash
+   xcrun notarytool store-credentials tempus --apple-id <your Apple ID> --team-id WB59R5BKBH
+   ```
+
+Then build, sign, notarize and staple in one go:
+
+```bash
+NOTARY_PROFILE=tempus scripts/release.sh
+```
+
+The script picks up the Developer ID certificate automatically; without it, the DMG uses the development signature and is only suitable for testing. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in the Xcode project before each release.
+
+To publish, host `docs/index.html`, `docs/icon.png` and `build/release/Tempus.dmg` in the same folder (for example GitHub Pages from `docs/`, with the DMG attached alongside).
+
 ## How it works
 
 | Layer | Technology |

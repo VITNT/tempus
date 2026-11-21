@@ -1,7 +1,9 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
     @AppStorage(Preferences.interval) private var interval = Preferences.defaultInterval
+    @AppStorage(Preferences.exportFolder) private var exportFolderBookmark: Data?
 
     private var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
@@ -17,6 +19,35 @@ struct SettingsView: View {
                 }
             } footer: {
                 Text("How often Tempus saves a screenshot while recording in Screenshots mode.")
+            }
+
+            Section {
+                let folder = ExportFolder.resolve(exportFolderBookmark)
+                LabeledContent("Save exports to") {
+                    HStack {
+                        if let folder {
+                            Label(folder.lastPathComponent, systemImage: "folder.fill")
+                                .help(folder.path(percentEncoded: false))
+                        } else {
+                            Text("Ask each time").foregroundStyle(.secondary)
+                        }
+                        Button("Choose…") {
+                            if let bookmark = ExportFolder.choose() { exportFolderBookmark = bookmark }
+                        }
+                    }
+                }
+                if let folder {
+                    HStack {
+                        Button("Show in Finder") { openInFinder(folder) }
+                        Button("Ask Each Time Instead") { exportFolderBookmark = nil }
+                    }
+                }
+            } header: {
+                Text("Exports")
+            } footer: {
+                Text(exportFolderBookmark == nil
+                     ? "Each export asks where to save the video."
+                     : "Exports save straight into this folder. A number is added if a file with the same name exists.")
             }
 
             Section {
@@ -49,4 +80,10 @@ struct SettingsView: View {
         .frame(width: 460)
         .fixedSize(horizontal: false, vertical: true)
     }
+}
+
+private func openInFinder(_ folder: URL) {
+    let scoped = folder.startAccessingSecurityScopedResource()
+    defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
+    NSWorkspace.shared.open(folder)
 }

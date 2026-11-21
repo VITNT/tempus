@@ -13,7 +13,7 @@ nonisolated enum VideoCodec: String, Sendable {
 /// Encoder size and bitrate for a live video timelapse.
 nonisolated struct VideoPlan: Equatable, Sendable {
     static let outputFPS = 30
-    static let speedOptions = [5, 10, 30, 60, 120, 300]
+    static let speedOptions = [2, 5, 10, 30, 60, 120, 300]
     static let defaultSpeed = 60
     /// Hard ceiling on file size: 500 MB per hour of recorded (real) time.
     static let maxBytesPerHour = 500_000_000.0
@@ -27,6 +27,9 @@ nonisolated struct VideoPlan: Equatable, Sendable {
     var bitrate: Int
     /// True when the 500 MB/hour cap, not the quality target, set the bitrate.
     var budgetLimited: Bool
+
+    /// Playback rates offered after recording, relative to the recorded speed.
+    static let playbackRates: [Double] = [0.25, 0.5, 1, 1.5, 2, 4, 8]
 
     /// Seconds of output video per hour of recording.
     static func videoSecondsPerHour(speed: Int) -> Double {

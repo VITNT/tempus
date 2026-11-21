@@ -2,6 +2,11 @@ import Testing
 @testable import Tempus
 
 struct VideoPlanTests {
+    @Test func playbackRatesIncludeOriginalSpeed() {
+        #expect(VideoPlan.playbackRates.contains(1))
+        #expect(VideoPlan.playbackRates == VideoPlan.playbackRates.sorted())
+    }
+
     @Test func bitrateUsesQualityTargetWhenUnderBudget() {
         // 1080p at 60×: quality = 1920·1080·30·0.045 ≈ 2.8 Mbps; budget ≈ 56.7 Mbps.
         let result = VideoPlan.bitrate(codec: .hevc, width: 1920, height: 1080, speed: 60)

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tempus for Mac</title>
+<meta name="description" content="Tempus records timelapses of your screen or camera, entirely on your Mac. Download and install instructions.">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #f6f6f8;
+    --surface: #ffffff;
+    --text: #1d1d1f;
+    --muted: #6e6e73;
+    --line: rgba(0, 0, 0, 0.09);
+    --accent: #e5413a;
+    --accent-ink: #ffffff;
+    --chip: rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 28px rgba(0, 0, 0, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111113;
+      --surface: #1c1c1f;
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --line: rgba(255, 255, 255, 0.1);
+      --accent: #ff5a52;
+      --chip: rgba(255, 255, 255, 0.07);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111113;
+    --surface: #1c1c1f;
+    --text: #f5f5f7;
+    --muted: #a1a1a6;
+    --line: rgba(255, 255, 255, 0.1);
+    --accent: #ff5a52;
+    --chip: rgba(255, 255, 255, 0.07);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  code, kbd {
+    font: 0.86em ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--chip);
+    padding: 0.1em 0.4em;
+    border-radius: 5px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+
+  header.hero { text-align: center; padding: 72px 0 56px; }
+  .hero img { width: 128px; height: 128px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.22)); }
+  .hero h1 { font-size: clamp(40px, 7vw, 60px); line-height: 1.05; letter-spacing: -0.025em; margin: 22px 0 10px; }
+  .hero .lede { font-size: clamp(19px, 2.6vw, 23px); color: var(--muted); max-width: 34em; margin: 0 auto 30px; line-height: 1.4; }
+  .download {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: var(--accent-ink);
+    text-decoration: none; font-weight: 600; font-size: 18px;
+    padding: 14px 28px; border-radius: 999px;
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .download:hover { transform: translateY(-1px); box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 42%, transparent); }
+  .download:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 3px; }
+  .download svg { width: 20px; height: 20px; }
+  .meta { margin-top: 16px; color: var(--muted); font-size: 14px; }
+  .meta span + span::before { content: "·"; margin: 0 8px; }
+
+  .strip { display: flex; justify-content: center; gap: 6px; margin: 44px auto 0; max-width: 560px; }
+  .strip i {
+    flex: 1; aspect-ratio: 16 / 10; border-radius: 6px; border: 1px solid var(--line);
+    background: linear-gradient(135deg, hsl(calc(205 + var(--n) * 24) 60% 58%), hsl(calc(235 + var(--n) * 24) 55% 42%));
+    opacity: calc(0.35 + var(--n) * 0.1);
+  }
+
+  section { padding: 48px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 30px; letter-spacing: -0.015em; margin: 0 0 8px; line-height: 1.2; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+
+  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); counter-reset: step; }
+  ol.steps li {
+    counter-increment: step; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 22px 22px 20px; box-shadow: var(--shadow);
+  }
+  ol.steps li::before {
+    content: counter(step); display: grid; place-items: center;
+    width: 30px; height: 30px; border-radius: 50%; margin-bottom: 14px;
+    background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent);
+    font-weight: 700; font-size: 15px;
+  }
+  .steps h3 { margin: 0 0 6px; font-size: 18px; }
+  .steps p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 4px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+  .perm { display: grid; gap: 14px; }
+  .perm .card p + p { margin-top: 8px; }
+  .path { display: inline-block; font-size: 15px; color: var(--text); }
+
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 20px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; padding: 16px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--muted); font-weight: 400; font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: "−"; }
+  details > div { color: var(--muted); padding: 0 0 18px; font-size: 15.5px; }
+  details > div p { margin: 0 0 10px; }
+  details > div p:last-child { margin: 0; }
+
+  .checksum { word-break: break-all; }
+  footer { text-align: center; color: var(--muted); font-size: 14px; padding: 36px 0 56px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    header.hero { padding: 48px 0 40px; }
+    .hero img { width: 104px; height: 104px; }
+    .meta span { display: block; }
+    .meta span + span::before { content: none; }
+    section { padding: 36px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .download { transition: none; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <img src="icon.png" alt="" width="128" height="128">
+    <h1>Tempus</h1>
+    <p class="lede">Timelapses of your screen, a single window, or your camera. Recorded and kept entirely on your Mac.</p>
+    <a class="download" href="Tempus.dmg" download>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 16h12"/></svg>
+      Download for Mac
+    </a>
+    <div class="meta">
+      <span>Version <span data-release="version">0.1.0</span></span>
+      <span>macOS 26 Tahoe or later</span>
+      <span>Apple silicon and Intel</span>
+      <span data-release="size">1.6 MB</span>
+    </div>
+    <div class="strip" aria-hidden="true">
+      <i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="install">
+    <h2>Install Tempus</h2>
+    <p class="sub">It takes about a minute. You don't need an account.</p>
+    <ol class="steps">
+      <li>
+        <h3>Open the download</h3>
+        <p>Double-click <code>Tempus.dmg</code> in your Downloads folder. A window opens with Tempus and your Applications folder.</p>
+      </li>
+      <li>
+        <h3>Drag to Applications</h3>
+        <p>Drag the Tempus icon onto the Applications folder, then eject the disk image from the Finder sidebar.</p>
+      </li>
+      <li>
+        <h3>Open Tempus</h3>
+        <p>Find Tempus in Launchpad or your Applications folder and open it. Press <kbd>⌘N</kbd> to start your first timelapse.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section id="permissions">
+    <h2>Allow screen or camera access</h2>
+    <p class="sub">macOS asks the first time you record. Tempus only uses access while a recording is running.</p>
+    <div class="perm">
+      <div class="card">
+        <h3>Screen Recording</h3>
+        <p>When you record a display or window, macOS asks to allow screen recording. If you dismissed the prompt, open <span class="path">System Settings → Privacy &amp; Security → Screen &amp; System Audio Recording</span>, turn on Tempus, and reopen the app.</p>
+      </div>
+      <div class="card">
+        <h3>Camera</h3>
+        <p>When you pick a camera as the source, macOS asks for camera access. To change it later, go to <span class="path">System Settings → Privacy &amp; Security → Camera</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <h2>What it does</h2>
+    <p class="sub">Two ways to record, depending on how long you'll be working.</p>
+    <div class="grid">
+      <div class="card"><h3>Screenshots mode</h3><p>A full-resolution frame every 5 seconds to 2 minutes. Choose which frames to keep and export an MP4 at any speed.</p></div>
+      <div class="card"><h3>Video mode</h3><p>A sped-up HEVC video written live, 5× to 300×. One hour at 60× plays back in one minute.</p></div>
+      <div class="card"><h3>Any source</h3><p>Record a whole display, one window, or a connected camera.</p></div>
+      <div class="card"><h3>Crash-safe</h3><p>Pause and resume whenever you like. If your Mac restarts, your recording is still there.</p></div>
+      <div class="card"><h3>Save where you want</h3><p>Pick an exports folder once in Settings, or choose a location each time.</p></div>
+      <div class="card"><h3>Private by design</h3><p>No accounts, servers, analytics, or uploads. Tempus makes no network requests.</p></div>
+    </div>
+  </section>
+
+  <section id="help">
+    <h2>Help</h2>
+    <p class="sub">Answers to common questions.</p>
+    <details>
+      <summary>macOS says it can't verify the developer</summary>
+      <div>
+        <p>Official releases are notarized by Apple and open normally. If you built Tempus yourself or got a test build, open <span class="path">System Settings → Privacy &amp; Security</span>, scroll to the message about Tempus, and click <strong>Open Anyway</strong>.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Tempus doesn't see my screen after I allowed access</summary>
+      <div><p>macOS applies Screen Recording changes when an app relaunches. Quit Tempus with <kbd>⌘Q</kbd> and open it again.</p></div>
+    </details>
+    <details>
+      <summary>Where are my recordings stored?</summary>
+      <div>
+        <p>Inside the app's private folder on your Mac. To find them, open Tempus Settings and click <strong>Show Recordings in Finder</strong>.</p>
+        <p>Exported videos go wherever you save them, or to the exports folder you picked in Settings.</p>
+      </div>
+    </details>
+    <details>
+      <summary>How do I update?</summary>
+      <div><p>Download the latest version from this page and drag it to Applications, replacing the old copy. Your recordings and settings are kept.</p></div>
+    </details>
+    <details>
+      <summary>How do I uninstall?</summary>
+      <div>
+        <p>Drag Tempus from Applications to the Trash.</p>
+        <p>To also delete your recordings, remove <code>~/Library/Containers/app.tempus.timelapse</code>. This permanently deletes every timelapse you haven't exported.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Verify the download</summary>
+      <div>
+        <p>In Terminal, run <code>shasum -a 256 ~/Downloads/Tempus.dmg</code>. The result should match:</p>
+        <p><code class="checksum" data-release="sha256">574415d18bb80018aa10b12d1622e753ba3e0db832b45bddc380c8d10c6cd9ea</code></p>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Tempus <span data-release="version">0.1.0</span> for macOS · Copyright © 2026 Tempus</div>
+</footer>
+</body>
+</html>

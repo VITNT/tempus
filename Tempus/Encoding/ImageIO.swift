@@ -38,6 +38,16 @@ nonisolated enum Stills {
         return CGImageSourceCreateImageAtIndex(source, 0, nil)
     }
 
+    /// Small decoded copy for filmstrips; uses the file's embedded thumbnail when it has one.
+    static func loadThumbnail(at url: URL, maxPixelSize: Int) -> CGImage? {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+        return CGImageSourceCreateThumbnailAtIndex(source, 0, [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxPixelSize,
+        ] as CFDictionary)
+    }
+
     /// Pixel size from the file header, without decoding the image.
     static func pixelSize(at url: URL) -> (width: Int, height: Int)? {
         guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),

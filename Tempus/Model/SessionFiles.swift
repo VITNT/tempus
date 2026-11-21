@@ -41,6 +41,11 @@ nonisolated enum SessionFiles {
         return urls.filter { $0.pathExtension == "heic" }.sorted { $0.lastPathComponent < $1.lastPathComponent }
     }
 
+    /// The frames an export uses: `frames` in order, minus any whose file name is excluded.
+    static func selectedFrames(_ frames: [URL], excluding excluded: Set<String>) -> [URL] {
+        excluded.isEmpty ? frames : frames.filter { !excluded.contains($0.lastPathComponent) }
+    }
+
     static func fileSize(_ url: URL) -> Int64 {
         let size = (try? FileManager.default.attributesOfItem(atPath: url.path(percentEncoded: false))[.size]) as? NSNumber
         return size?.int64Value ?? 0

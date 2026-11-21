@@ -5,6 +5,8 @@ nonisolated enum Preferences {
     static let interval = "tempus-interval"
     static let mode = "tempus-mode"
     static let speed = "tempus-speed"
+    /// Security-scoped bookmark of the folder exports save into; absent means ask each time.
+    static let exportFolder = "tempus-export-folder"
     static let intervalOptions = [5, 15, 30, 60, 120]
     static let defaultInterval = 60
 }

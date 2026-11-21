@@ -51,6 +51,11 @@ nonisolated enum Format {
         "1 hr → \(speedOutput(speed))"
     }
 
+    /// Relative playback rate: `0.25×`, `1×`, `1.5×`.
+    static func rate(_ rate: Double) -> String {
+        "\(rate.formatted(.number.precision(.fractionLength(0...2))))×"
+    }
+
     static func interval(_ seconds: Int) -> String {
         if seconds < 60 { return "Every \(seconds) seconds" }
         let minutes = seconds / 60
