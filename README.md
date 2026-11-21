@@ -62,7 +62,7 @@ NOTARY_PROFILE=tempus scripts/release.sh
 
 The script picks up the Developer ID certificate automatically; without it, the DMG uses the development signature and is only suitable for testing. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in the Xcode project before each release.
 
-To publish, host `docs/index.html`, `docs/icon.png` and `build/release/Tempus.dmg` in the same folder (for example GitHub Pages from `docs/`, with the DMG attached alongside).
+To publish, serve `docs/` with GitHub Pages and attach `build/release/Tempus.dmg` to a GitHub Release. The download button links to `releases/latest/download/Tempus.dmg`, so the asset must keep that exact name.
 
 ## How it works
 
